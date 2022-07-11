@@ -1,5 +1,5 @@
 
 
-export const url = "http://localhost:5000"
-export const frontend_url = "http://localhost:3000"
+export const url = "https://redux-ticket-booking-app.herokuapp.com"
+export const frontend_url = "https://redux-ticket-booking-app.netlify.app"
 
