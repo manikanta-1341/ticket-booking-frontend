@@ -17,23 +17,25 @@ import { useNavigate } from "react-router-dom"
 
 
 export default function Ticket() {
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function (event) {
+        window.history.go(1);
+    };
     const user_details = jwtDecode(window.sessionStorage.getItem('token')).user
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(Fetch_User(user_details._id))
         dispatch(Fetch_Movies())
-    }, [dispatch , user_details._id])
+    }, [dispatch, user_details._id])
 
     const user = useSelector(state => state.user)
     const movies = useSelector(state => state.movies)
-    let movie_image = ""
-    movies.filter((obj) => {
-        return user[0].tickets.filter((t_obj) => t_obj.order.movie_name === obj.title && (movie_image = obj.image))
-    })
+    let movie_image = {}
+    movies.map((obj) =>  movie_image[obj.title] = obj.image )
     const fetch_user_apiStatus = useSelector(state => state.fetch_user_apiStatus)
     const accCompOpen = useSelector(state => state.accCompOpen)
-    const nav = useNavigate() 
+    const nav = useNavigate()
 
     return (
 
@@ -62,7 +64,7 @@ export default function Ticket() {
                                             <Avatar sx={{ color: "red", bgcolor: "transparent" }}>BT</Avatar>
                                         </Box>
                                         <Box>
-                                            <Button sx={{color:"white"}} onClick={()=>nav('/movies')}><Typography>Home</Typography></Button>
+                                            <Button sx={{ color: "white" }} onClick={() => nav('/movies')}><Typography>Home</Typography></Button>
                                         </Box>
                                     </Grid>
                                     <Grid item sx={{ pr: 10 }}>
@@ -74,41 +76,45 @@ export default function Ticket() {
                                         </IconButton>
                                     </Grid>
                                 </Grid>
-                            </Toolbar>           
+                            </Toolbar>
                         </AppBar>
                     </Box>
                     <Grid container justifyContent="center" spacing={4} sx={{ mt: 2 }}>
                         {
                             user[0].tickets.map((obj, i) => {
                                 return (
-                                    <Grid item key={i}>
-                                        <Card elevation={24}     >
-                                            <CardContent>
-                                                <Grid container spacing={4} direction="row" alignItems="center">
-                                                    <Grid item>
-                                                        <Box
-                                                            component="img"
-                                                            src={movie_image}
-                                                            width={100}
-                                                            height={150}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item >
-                                                        {
-                                                            <Stack spacing={1}>
-                                                                <Typography variant="h5" sx={{ fontWeight: "bold", textTransform: "capitalize" }}>{obj.order.movie_name}</Typography>
-                                                                <Typography>Time:&nbsp;{obj.order.show_time}</Typography>
-                                                                <Typography variant="body1" sx={{ fontWeight: "bold", textTransform: "capitalize" }}>SeatNo's:&nbsp;{obj.order.seatNo}</Typography>
-                                                                <Typography sx={{ textTransform: "capitalize" }}>{obj.order.theater_name}</Typography>
-                                                                <Typography sx={{ textTransform: "capitalize" }}>{obj.order.date.slice(5, 16)}</Typography>
+                                    new Date(obj.order.date).getDate() >= new Date().getDate() &&
+                                    (
 
-                                                            </Stack>
-                                                        }
+                                        <Grid item key={i}>
+                                            <Card elevation={24}     >
+                                                <CardContent>
+                                                    <Grid container spacing={4} direction="row" alignItems="center">
+                                                        <Grid item>
+                                                            <Box
+                                                                component="img"
+                                                                src={movie_image[obj.order.movie_name]}
+                                                                width={100}
+                                                                height={150}
+                                                            />
+                                                        </Grid>
+                                                        <Grid item >
+                                                            {
+                                                                <Stack spacing={1}>
+                                                                    <Typography variant="h5" sx={{ fontWeight: "bold", textTransform: "capitalize" }}>{obj.order.movie_name}</Typography>
+                                                                    <Typography>Time:&nbsp;{obj.order.show_time}</Typography>
+                                                                    <Typography variant="body1" sx={{ fontWeight: "bold", textTransform: "capitalize" }}>SeatNo's:&nbsp;{obj.order.seatNo}</Typography>
+                                                                    <Typography sx={{ textTransform: "capitalize" }}>{obj.order.theater_name}</Typography>
+                                                                    <Typography sx={{ textTransform: "capitalize" }}>{obj.order.date.slice(5, 16)}</Typography>
+
+                                                                </Stack>
+                                                            }
+                                                        </Grid>
                                                     </Grid>
-                                                </Grid>
-                                            </CardContent>
-                                        </Card>
-                                    </Grid>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                    )
                                 )
                             })
                         }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
     Card, CardContent, CardActions, Button, Typography,
     Box, CircularProgress, Grid, IconButton, Slider, Dialog,
@@ -47,7 +47,7 @@ const MovieDetailsComp = () => {
     const user_apiStatus = useSelector(state => state.fetch_user_apiStatus)
     const user = useSelector(state => state.user)[0]
     const user_rating = user && user.reviews.filter((e) => e.name === movie_Details[0].title)
-    const rating_time = user_rating !== undefined && user_rating.length > 0 && timediff(user_rating[0].time, new Date().getTime(), 'HmS')
+    const rating_time = user_rating !== undefined && user_rating.length > 0 && timediff(user_rating[0].time, new Date().getTime(), 'YDHms')
     const dispatch = useDispatch()
     const nav = useNavigate()
     const likes_style = {
@@ -64,7 +64,7 @@ const MovieDetailsComp = () => {
 
     useEffect(() => {
         dispatch(Fetch_User(user_details._id))
-    }, [dispatch ,user_details._id])
+    }, [dispatch, user_details._id])
 
     return (
         <Box>
@@ -83,12 +83,12 @@ const MovieDetailsComp = () => {
                 : user_apiStatus === "success" ?
                     <Box>
                         <NavBar />
-                        <Stack spacing={5} sx={{mb:"2rem"}}>
+                        <Stack spacing={5} sx={{ mb: "2rem" }}>
                             <Grid container>
                                 {movie_Details.map((obj) => {
-                                    
+
                                     return (
-                                        <Grid container columnGap={3} key={obj._id} sx={{ px: 6, py: 2, backgroundPosition:"right", backgroundImage: `linear-gradient(90deg, rgb(26, 26, 26) 24.97%, rgb(26, 26, 26) 38.3%, rgba(26, 26, 26, 0.04) 97.47%, rgb(26, 26, 26) 100%),url(${obj.coverImage})`  }}>
+                                        <Grid container columnGap={3} key={obj._id} sx={{ px: 6, py: 2, backgroundPosition: "right", backgroundImage: `linear-gradient(90deg, rgb(26, 26, 26) 24.97%, rgb(26, 26, 26) 38.3%, rgba(26, 26, 26, 0.04) 97.47%, rgb(26, 26, 26) 100%),url(${obj.coverImage})` }}>
                                             <Grid item >
                                                 <IconButton disableRipple={true} sx={{ display: "flex", flexDirection: "column" }}>
                                                     <Box
@@ -189,8 +189,7 @@ const MovieDetailsComp = () => {
                                                                     <DialogActions sx={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
                                                                         <Button color="error" variant="contained" onClick={() => setDialogOpen(false)}>Cancel</Button>
                                                                         <Button color="error" variant="contained"
-                                                                            onClick={() =>
-                                                                            {
+                                                                            onClick={() => {
                                                                                 dispatch(UpdateReview({
                                                                                     id: user_details._id,
                                                                                     obj: {
@@ -211,24 +210,30 @@ const MovieDetailsComp = () => {
 
                                                                 <Box>
                                                                     <Typography variant="h6">Your Rating</Typography>
-                                                                    
-                                                                    <Typography>Rated&nbsp;{rating_time.hours > 0 ? `${rating_time.hours}hr` : rating_time.minutes > 0 ? `${rating_time.minutes}min` : `${rating_time.seconds}s`}&nbsp;ago</Typography>
+
+                                                                    <Typography>Rated&nbsp;
+                                                                        {
+                                                                        rating_time.days > 0? `${rating_time.days}Days` :rating_time.hours > 0 ?
+                                                                            `${rating_time.hours}hr` : rating_time.minutes > 0 ?
+                                                                                `${rating_time.minutes}min` : `Few seconds`
+                                                                        }
+                                                                        &nbsp;ago</Typography>
                                                                 </Box>
                                                                 <Box sx={{ display: "flex", alignItems: "center" }}>
                                                                     <Favorite color="error" />
                                                                     <Typography>{user_rating[0].rating}%</Typography>
                                                                 </Box>
-                                                            </Box>    
+                                                            </Box>
                                                         }
                                                     </Grid>
                                                     <Grid item>
-                                                        <Box sx={{pl:1, display: "flex", textTransform: "capitalize", color: "white", gap: "1rem" }}>
+                                                        <Box sx={{ pl: 1, display: "flex", textTransform: "capitalize", color: "white", gap: "1rem" }}>
                                                             <Typography>{obj.cinemaType}</Typography>
                                                             <Typography>{obj.language}</Typography>
                                                         </Box>
                                                     </Grid>
                                                     <Grid item>
-                                                        <Box component="ul" sx={{ pl:1, display: "flex", justifyContent: "space-between", color: "white", textTransform: "capitalize", }}>
+                                                        <Box component="ul" sx={{ pl: 1, display: "flex", justifyContent: "space-between", color: "white", textTransform: "capitalize", }}>
                                                             <Box sx={{ display: "flex", alignItems: "center" }}>
                                                                 <Circle sx={{ fontSize: "0.5rem", p: 0, mr: 1 }} />
                                                                 <Typography>{obj.time.replace(',', 'hr ')}min</Typography>
@@ -260,51 +265,51 @@ const MovieDetailsComp = () => {
                                 })}
                             </Grid>
                             <Box sx={{ px: 6 }}>
-                                <Stack spacing={6}  divider={<Divider flexItem />}>
-                                <Box>
-                                    <Typography variant="h5" sx={{ fontWeight: "bold" }}>About the movie</Typography>
-                                    <Typography variant="body1" >{movie_Details[0].about}</Typography>
-                                </Box>
-                                <Box>
-                                    <Typography variant="h5" sx={{ fontWeight: "bold",mb:"1rem" }}>Cast</Typography>
-                                    <Grid container spacing={3}>
-                                        {
-                                            movie_Details[0].cast.map((obj) => {
-                                                return (
-                                                    <Grid item key={obj.name} >
-                                                        <Avatar
-                                                            sx={{ width: 120, height: 120 }}
-                                                            src={obj.image}
-                                                        />
-                                                        <Box sx={{textAlign:"center"}}>
-                                                        <Typography variant="body1" sx={{ textTransform: "capitalize", }}>{obj.name}</Typography>
-                                                        </Box>
-                                                    </Grid>
-                                                )
-                                            })
-                                        }
-                                    </Grid>
-                                </Box>
-                                <Box>
-                                    <Typography variant="h5" sx={{ fontWeight: "bold",mb:"1rem" }}>Crew</Typography>
-                                    <Grid container spacing={3}>
-                                        {
-                                            movie_Details[0].crew.map((obj) => {
-                                                return (
-                                                    <Grid item key={obj.name}>
-                                                        <Avatar
-                                                            sx={{ width: 120, height: 120 }}
-                                                            src={obj.image}
-                                                        />
-                                                        <Box sx={{textAlign:"center"}}>
-                                                        <Typography variant="body" sx={{ textTransform: "capitalize" }}>{obj.name}</Typography>
-                                                        </Box>
-                                                    </Grid>
-                                                )
-                                            })
-                                        }
-                                    </Grid>
-                                </Box>
+                                <Stack spacing={6} divider={<Divider flexItem />}>
+                                    <Box>
+                                        <Typography variant="h5" sx={{ fontWeight: "bold" }}>About the movie</Typography>
+                                        <Typography variant="body1" >{movie_Details[0].about}</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography variant="h5" sx={{ fontWeight: "bold", mb: "1rem" }}>Cast</Typography>
+                                        <Grid container spacing={3}>
+                                            {
+                                                movie_Details[0].cast.map((obj) => {
+                                                    return (
+                                                        <Grid item key={obj.name} >
+                                                            <Avatar
+                                                                sx={{ width: 120, height: 120 }}
+                                                                src={obj.image}
+                                                            />
+                                                            <Box sx={{ textAlign: "center" }}>
+                                                                <Typography variant="body1" sx={{ textTransform: "capitalize", }}>{obj.name}</Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                    )
+                                                })
+                                            }
+                                        </Grid>
+                                    </Box>
+                                    <Box>
+                                        <Typography variant="h5" sx={{ fontWeight: "bold", mb: "1rem" }}>Crew</Typography>
+                                        <Grid container spacing={3}>
+                                            {
+                                                movie_Details[0].crew.map((obj) => {
+                                                    return (
+                                                        <Grid item key={obj.name}>
+                                                            <Avatar
+                                                                sx={{ width: 120, height: 120 }}
+                                                                src={obj.image}
+                                                            />
+                                                            <Box sx={{ textAlign: "center" }}>
+                                                                <Typography variant="body" sx={{ textTransform: "capitalize" }}>{obj.name}</Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                    )
+                                                })
+                                            }
+                                        </Grid>
+                                    </Box>
                                 </Stack>
                             </Box>
                         </Stack>

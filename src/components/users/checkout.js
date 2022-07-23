@@ -7,15 +7,14 @@ import {
 } from "@mui/material";
 import {  useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
-import { url, frontend_url } from '../../api/api'
+import { url } from '../../api/api' 
 import axios from 'axios'
 
 
 
 export default function Payment() {
-    window.history.pushState(null, null, window.location.href);
-    window.onpopstate = function (event) {
-        window.location.assign(`${frontend_url}/movies`);
+    window.onload = () => {
+        return window.location.assign("/movies");
     };
     const user_data = jwtDecode(window.sessionStorage.getItem('token'))
     const selected_seats = useSelector(state => state.selected_seats)
@@ -67,11 +66,11 @@ export default function Payment() {
         var rzp1 = new window.Razorpay(options);
         rzp1.open();
         rzp1.on('payment.failed', function (response) {
-            alert(response.error.code);
-            alert(response.error.description);
-            alert(response.error.source);
-            alert(response.error.step);
+            // alert(response.error.code);
+            // alert(response.error.source);
+            // alert(response.error.step);
             alert(response.error.reason);
+            alert(response.error.description);
             alert(response.error.metadata.order_id);
             alert(response.error.metadata.payment_id);
         });

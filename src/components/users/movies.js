@@ -88,7 +88,7 @@ const Dashboard = () => {
         }
     }
     useEffect(() => {
-        dispatch(Fetch_Movies())          
+        dispatch(Fetch_Movies()) 
     }, [dispatch])
     return (
         <Box>

@@ -20,7 +20,7 @@ export default function BookingComp() {
         dispatch(Fetch_theaters())
         dispatch(Fetch_Movies())
         dispatch(MovieDetails(movie_Details[0]))
-    }, [dispatch,movie_Details])
+    }, [dispatch])
     const movie_name = movie_Details[0].title
     const theaters = useSelector(state => state.theaters)
     const movie_theaters = []
