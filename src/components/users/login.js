@@ -38,7 +38,7 @@ export default function SignIn() {
     }
     const [passwordDiv, setPasswordDiv] = useState(true)
     const handleSubmit = async (e) => {
-        // console.log(e)
+        
         try {
             let response = await axios.post(`${url}/user/login`, {
                 username: e.email,

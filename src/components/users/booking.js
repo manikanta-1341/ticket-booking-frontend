@@ -95,7 +95,7 @@ export default function BookingComp() {
                                                             return (
                                                                 new Date(`${new Date().toISOString().slice(0, 10) + " " + time}`).getHours() >= new Date().getHours() ?
                                                                 <Grid item key={time_i}>
-                                                                        {console.log(new Date(`${new Date().toISOString().slice(0, 10) + " " + time}`).getHours() , new Date().getHours()) }
+                                                                        
                                                                         <Tooltip arrow placement="top" title={
                                                                             <Stack display="flex" direction="row" alignItems="center" spacing={2}>
                                                                                 {
