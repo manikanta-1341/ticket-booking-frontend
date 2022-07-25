@@ -37,7 +37,7 @@ const Reducer = createSlice({
         },
         TheaterDetails: (state, { payload }) => {
             state.theaterDetails = [payload]
-            state.currentOpenComp = "TheaterDetails"
+            state.currentOpenComp = "TheaterDetails" 
         },
         TheaterCompOpen: (state, { payload }) => {
             state.createTheaterCompOpen = !state.createTheaterCompOpen

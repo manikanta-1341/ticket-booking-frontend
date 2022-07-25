@@ -28,7 +28,9 @@ export default function SeatLayoutComp() {
 
     const theaterDetails = useSelector((state) => state.theaterDetails)[0];
     const movie_name = theaterDetails.movie_details.name;
-    const occupiedSeats = theaterDetails.theater_details.cinemas.filter((obj) => obj.name === movie_name)[0].selected
+    const occupiedSeats = theaterDetails.theater_details.cinemas.filter(
+        (obj) => obj.name === movie_name
+    )[0].selected;
     const movie_time = theaterDetails.time;
     const date = theaterDetails.date_time;
     const theater_details = theaterDetails.theater_details.cinemas[0];
@@ -89,9 +91,24 @@ export default function SeatLayoutComp() {
                 seatNo: alphas.split("")[alphas_index] + (i + 1),
                 price: theater_details.ticketRanges[ticket_index],
                 selected: false,
+                disabled: false,
                 hover: false,
             });
         }
+        [...res].reverse().map((main_arr) =>
+            main_arr.map((sub_arr) =>
+                sub_arr.map((e) => {
+                    occupiedSeats.map((occ_obj) => {
+                        if (
+                            occ_obj.prices.includes(parseInt(e.price)) &&
+                            occ_obj.seats.includes(e.seatNo)
+                        ) {
+                            e.disabled = true;
+                        }
+                    });
+                })
+            )
+        );
         setSeats([...res].reverse());
         setScreen_num(theater_details.screens[id]);
     }, [
@@ -144,6 +161,9 @@ export default function SeatLayoutComp() {
     };
 
     const handleCheckout = () => {
+        // let ticketName_obj = {}
+        // reverse_ticketName.map((tn,i)=>ticketName_obj[tn] = reverse_ticketRanges[i])
+        // console.log(ticketName_obj) 
         let dummySelected = [
             {
                 date: date,
@@ -156,6 +176,7 @@ export default function SeatLayoutComp() {
                 screen: screen_num,
                 seatNo: "",
                 price: [],
+                ticketName:[],
                 totalPrice: totalPrice,
             },
         ];
@@ -164,6 +185,7 @@ export default function SeatLayoutComp() {
             dummySelected[0].price.push(parseInt(obj.price));
             return obj;
         });
+        // dummySelected.ticketName = fromArray(new Set(prices))
         dispatch(selectedSeats(dummySelected));
         nav(`/payment/${movie_name.replace(" ", "-")}`);
     };
@@ -229,29 +251,7 @@ export default function SeatLayoutComp() {
                                                                         {e.seatNo.replace(new RegExp(/\d/g), "")}
                                                                         <Button
                                                                             variant={"outlined"}
-                                                                            disabled={
-                                                                                occupiedSeats
-                                                                                    ? occupiedSeats[0].seats.includes(
-                                                                                        e.seatNo
-                                                                                    ) &&
-                                                                                        e.seatNo ===
-                                                                                        occupiedSeats[0].seats.split(",")[
-                                                                                        occupiedSeats[0].seats
-                                                                                            .split(",")
-                                                                                            .indexOf(e.seatNo)
-                                                                                        ] &&
-                                                                                        parseInt(e.price) ===
-                                                                                        occupiedSeats[0].prices[
-                                                                                        occupiedSeats[0].prices.indexOf(
-                                                                                            parseInt(e.price)
-                                                                                        )
-                                                                                        ] &&
-                                                                                        theaterDetails.movie_details
-                                                                                            .selected
-                                                                                        ? true
-                                                                                        : false
-                                                                                    : false
-                                                                            }
+                                                                            disabled={e.disabled}
                                                                             disableRipple
                                                                             onMouseOver={() =>
                                                                                 handleMouseOver(i, sub_i, e_i)
@@ -294,29 +294,7 @@ export default function SeatLayoutComp() {
                                                                     >
                                                                         <Button
                                                                             variant={"outlined"}
-                                                                            disabled={
-                                                                                occupiedSeats
-                                                                                    ? occupiedSeats[0].seats.includes(
-                                                                                        e.seatNo
-                                                                                    ) &&
-                                                                                        e.seatNo ===
-                                                                                        occupiedSeats[0].seats.split(",")[
-                                                                                        occupiedSeats[0].seats
-                                                                                            .split(",")
-                                                                                            .indexOf(e.seatNo)
-                                                                                        ] &&
-                                                                                        parseInt(e.price) ===
-                                                                                        occupiedSeats[0].prices[
-                                                                                        occupiedSeats[0].prices.indexOf(
-                                                                                            parseInt(e.price)
-                                                                                        )
-                                                                                        ] &&
-                                                                                        theaterDetails.movie_details
-                                                                                            .selected
-                                                                                        ? true
-                                                                                        : false
-                                                                                    : false
-                                                                            }
+                                                                            disabled={e.disabled}
                                                                             disableRipple
                                                                             onMouseOver={() =>
                                                                                 handleMouseOver(i, sub_i, e_i)
@@ -362,29 +340,7 @@ export default function SeatLayoutComp() {
                                                                     >
                                                                         <Button
                                                                             variant={"outlined"}
-                                                                            disabled={
-                                                                                occupiedSeats
-                                                                                    ? occupiedSeats[0].seats.includes(
-                                                                                        e.seatNo
-                                                                                    ) &&
-                                                                                        e.seatNo ===
-                                                                                        occupiedSeats[0].seats.split(",")[
-                                                                                        occupiedSeats[0].seats
-                                                                                            .split(",")
-                                                                                            .indexOf(e.seatNo)
-                                                                                        ] &&
-                                                                                        parseInt(e.price) ===
-                                                                                        occupiedSeats[0].prices[
-                                                                                        occupiedSeats[0].prices.indexOf(
-                                                                                            parseInt(e.price)
-                                                                                        )
-                                                                                        ] &&
-                                                                                        theaterDetails.movie_details
-                                                                                            .selected
-                                                                                        ? true
-                                                                                        : false
-                                                                                    : false
-                                                                            }
+                                                                            disabled={e.disabled}
                                                                             disableRipple
                                                                             onMouseOver={() =>
                                                                                 handleMouseOver(i, sub_i, e_i)
@@ -423,28 +379,7 @@ export default function SeatLayoutComp() {
                                                                 ) : (
                                                                     <Button
                                                                         variant={"outlined"}
-                                                                        disabled={
-                                                                            occupiedSeats
-                                                                                ? occupiedSeats[0].seats.includes(
-                                                                                    e.seatNo
-                                                                                ) &&
-                                                                                    e.seatNo ===
-                                                                                    occupiedSeats[0].seats.split(",")[
-                                                                                    occupiedSeats[0].seats
-                                                                                        .split(",")
-                                                                                        .indexOf(e.seatNo)
-                                                                                    ] &&
-                                                                                    parseInt(e.price) ===
-                                                                                    occupiedSeats[0].prices[
-                                                                                    occupiedSeats[0].prices.indexOf(
-                                                                                        parseInt(e.price)
-                                                                                    )
-                                                                                    ] &&
-                                                                                    theaterDetails.movie_details.selected
-                                                                                    ? true
-                                                                                    : false
-                                                                                : false
-                                                                        }
+                                                                        disabled={e.disabled}
                                                                         disableRipple
                                                                         onMouseOver={() =>
                                                                             handleMouseOver(i, sub_i, e_i)

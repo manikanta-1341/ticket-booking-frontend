@@ -19,7 +19,7 @@ export default function Payment() {
     const user_data = jwtDecode(window.sessionStorage.getItem('token'))
     const selected_seats = useSelector(state => state.selected_seats)
     const movie_Details = useSelector(state => state.movieDetails)[0]
-
+    const reg = new RegExp("/\D\g/","")
 
     let script = document.createElement('script')
     script.src = "https://checkout.razorpay.com/v1/checkout.js"
@@ -110,12 +110,12 @@ export default function Payment() {
                                 selected_seats.map((obj, i) => {
                                     return (
                                         <Box key={i}>
-                                            <Typography variant="h5" sx={{ fontWeight: "bold", textTransform: "capitalize" }}>{obj.movie_name}</Typography>
+                                            <Typography variant="h5" sx={{ fontWeight: "bold", textTransform: "capitalize" }}>{obj.movie_name}</Typography>  
                                             <Typography>Time:&nbsp;{obj.show_time}</Typography>
-                                            <Typography variant="body1" sx={{ fontWeight: "bold", textTransform: "capitalize" }}>SeatNo's:&nbsp;{obj.seatNo}</Typography>
+                                            <Typography variant="body1" sx={{ fontWeight: "bold", textTransform: "capitalize",wordWrap:"break-word" }}>SeatNo's:&nbsp;{obj.seatNo}</Typography>
                                             <Typography sx={{ textTransform: "capitalize" }}>{obj.theater_name}</Typography>
                                             <Typography sx={{ textTransform: "capitalize" }}>{obj.date.slice(5, 16)}</Typography>
-                                            <Typography sx={{ textTransform: "capitalize", fontWeight: "bold" }}>Total:&nbsp;{obj.totalPrice}</Typography>
+                                            <Typography sx={{ textTransform: "capitalize", fontWeight: "bold" }}>Total:&nbsp;{obj.totalPrice}</Typography>    
                                         </Box>
                                     )
                                 })
