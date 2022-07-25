@@ -93,9 +93,9 @@ export default function BookingComp() {
                                                     {
                                                         c_obj.showTimes.map((time, time_i) => {
                                                             return (
-                                                                new Date(`${new Date().toLocaleDateString() + " " + time}`).getHours() >= new Date().getHours() ?
-                                                                    // 
-                                                                    <Grid item key={time_i}>
+                                                                new Date(`${new Date().toISOString().slice(0, 10) + " " + time}`).getHours() >= new Date().getHours() ?
+                                                                <Grid item key={time_i}>
+                                                                        {console.log(new Date(`${new Date().toISOString().slice(0, 10) + " " + time}`).getHours() , new Date().getHours()) }
                                                                         <Tooltip arrow placement="top" title={
                                                                             <Stack display="flex" direction="row" alignItems="center" spacing={2}>
                                                                                 {
